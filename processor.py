@@ -1,4 +1,4 @@
-from PIL import Image, ImageOps
+from PIL import Image
 import sys
 
 
@@ -10,8 +10,12 @@ def normalise(min, max, value, char_len):
 if len(sys.argv) < 2:
     print("you need to provide the image path [python3 processor.py /image]")
     sys.exit(1)
-else if:
-    NotImplemented
+elif len(sys.argv) < 4:
+    x_scale = 8
+    y_scale = 12
+else:
+    x_scale = int(sys.argv[2])
+    y_scale = int(sys.argv[3])
 
 image_path = sys.argv[1]
 
@@ -25,8 +29,8 @@ except FileNotFoundError:
 greyscale = im.convert("L")
 
 width, height = greyscale.size
-height = round(height/6)
-width = round(width/4)
+height = round(height/y_scale)
+width = round(width/x_scale)
 greyscale = greyscale.resize((width, height))
 
 greyscale.save("result.jpg")
