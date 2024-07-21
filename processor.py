@@ -35,7 +35,7 @@ greyscale = greyscale.resize((width, height))
 
 greyscale.save("result.jpg")
 
-chars = [" ", ".", ":", "-", "=", "+", "*", "#", "%", "@"]
+chars = [" ", ".", ":", "-", "c", "=", "+", "*", "o", "P", "#", "%", "@"]
 
 comp = []
 
