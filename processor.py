@@ -7,58 +7,53 @@ def normalise(min, max, value, char_len):
     return round(((value - min)/range)*char_len)
 
 
-def convert(image_path, x_scale, y_scale):
-    try:
-        im = Image.open(image_path)
+if len(sys.argv) < 2:
+    print("you need to provide the image path [python3 processor.py /image]")
+    sys.exit(1)
+elif len(sys.argv) < 4:
+    x_scale = 8
+    y_scale = 12
+else:
+    x_scale = int(sys.argv[2])
+    y_scale = int(sys.argv[3])
 
-    except FileNotFoundError:
-        print("This file doesn't exist")
-        sys.exit(1)
+image_path = sys.argv[1]
 
-    greyscale = im.convert("L")
+try:
+    im = Image.open(image_path)
 
-    width, height = greyscale.size
-    height = round(height/y_scale)
-    width = round(width/x_scale)
-    greyscale = greyscale.resize((width, height))
+except FileNotFoundError:
+    print("This file doesn't exist")
+    sys.exit(1)
 
-    greyscale.save("result.jpg")
+greyscale = im.convert("L")
 
-    chars = [" ", ".", ":", "-", "c", "=", "+", "*", "o", "", "#", "%", "@"]
+width, height = greyscale.size
+height = round(height/y_scale)
+width = round(width/x_scale)
+greyscale = greyscale.resize((width, height))
 
-    comp = []
+greyscale.save("result.jpg")
 
-    for line in range(height):
-        for column in range(width):
-            pixel = greyscale.getpixel((column, line))
-            comp.append(pixel)
+chars = [" ", ".", ":", "-", "c", "=", "+", "*", "o", "P", "#", "%", "@"]
 
-    minimum = min(comp)
-    maximum = max(comp)
+comp = []
 
-    output_file = open("result.txt", "w")
-    for line in range(height):
-        for column in range(width):
-            value = greyscale.load()[column, line]
-            pixel = chars[normalise(minimum, maximum, value, len(chars))-1]
-            print(pixel)
-            output_file.write(pixel)
-        output_file.write("\n")
+for line in range(height):
+    for column in range(width):
+        pixel = greyscale.getpixel((column, line))
+        comp.append(pixel)
 
-    output_file.close()
+minimum = min(comp)
+maximum = max(comp)
 
+output_file = open("result.txt", "w")
+for line in range(height):
+    for column in range(width):
+        value = greyscale.load()[column, line]
+        pixel = chars[normalise(minimum, maximum, value, len(chars))-1]
+        print(pixel)
+        output_file.write(pixel)
+    output_file.write("\n")
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("you need to provide the image path [python3 processor.py /]")
-        sys.exit(1)
-    elif len(sys.argv) < 4:
-        x_scale = 8
-        y_scale = 12
-    else:
-        x_scale = int(sys.argv[2])
-        y_scale = int(sys.argv[3])
-
-    image_path = sys.argv[1]
-
-    convert(image_path, x_scale, y_scale)
+output_file.close()
